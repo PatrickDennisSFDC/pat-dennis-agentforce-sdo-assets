@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Agentforce SDO Assets - Deployment Script
-# This script deploys all assets and assigns the critical Agent_Actions permission set
+# This script deploys all assets and assigns the critical Agentforce_SDO_CustomAssetPermissions permission set
 
 set -e  # Exit on error
 
@@ -43,26 +43,26 @@ echo -e "${GREEN}✅ Deployment successful!${NC}"
 echo ""
 
 # Step 2: Assign permission set
-echo -e "${YELLOW}Step 2: Assigning Agent_Actions permission set...${NC}"
+echo -e "${YELLOW}Step 2: Assigning Agentforce_SDO_CustomAssetPermissions permission set...${NC}"
 
 if [ -z "$USERNAME" ]; then
     # Assign to current user
     echo "Assigning to current user..."
     sf org assign permset \
-        --name Agent_Actions \
+        --name Agentforce_SDO_CustomAssetPermissions \
         --target-org "$ORG_ALIAS"
 else
     # Assign to specific user
     echo "Assigning to user: $USERNAME"
     sf org assign permset \
-        --name Agent_Actions \
+        --name Agentforce_SDO_CustomAssetPermissions \
         --on-behalf-of "$USERNAME" \
         --target-org "$ORG_ALIAS"
 fi
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Permission set assignment failed!${NC}"
-    echo -e "${YELLOW}You may need to assign it manually via Setup → Permission Sets → Agent_Actions${NC}"
+    echo -e "${YELLOW}You may need to assign it manually via Setup → Permission Sets → Agentforce SDO Custom Asset Permissions${NC}"
     exit 1
 fi
 
@@ -74,7 +74,7 @@ echo -e "${YELLOW}Step 3: Verifying deployment...${NC}"
 
 # Check if we can query the permission set
 sf data query \
-    --query "SELECT Id, Name FROM PermissionSet WHERE Name = 'Agent_Actions' LIMIT 1" \
+    --query "SELECT Id, Name FROM PermissionSet WHERE Name = 'Agentforce_SDO_CustomAssetPermissions' LIMIT 1" \
     --target-org "$ORG_ALIAS" \
     --json > /dev/null 2>&1
 
@@ -92,5 +92,5 @@ echo "1. Go to Setup → Agentforce Agents"
 echo "2. Create or edit your agent"
 echo "3. Add the deployed actions to your agent's action library"
 echo ""
-echo -e "${YELLOW}⚠️  Important: Make sure the Agent_Actions permission set is assigned to any users who will use Agentforce!${NC}"
+echo -e "${YELLOW}⚠️  Important: Make sure the Agentforce_SDO_CustomAssetPermissions permission set is assigned to any users who will use Agentforce!${NC}"
 

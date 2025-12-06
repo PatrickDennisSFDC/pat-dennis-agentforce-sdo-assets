@@ -67,7 +67,7 @@ These custom objects come with sample data population scripts to accelerate demo
 
 ### 🔐 Security & Permissions
 
-- **Agent_Actions Permission Set** - Grants access to all Apex classes, objects, and fields
+- **Agentforce SDO Custom Asset Permissions** - Grants full access to all Apex classes, custom objects, and fields in the repository
 - **System Admin Profile** - Configured with explicit field permissions
 - **Page Layouts** - Updated with all custom fields
 
@@ -135,7 +135,7 @@ sf project deploy start --source-dir force-app/main/default --target-org myorg
 
 4. **Assign the permission set:**
 ```bash
-sf org assign permset --name Agent_Actions --target-org myorg
+sf org assign permset --name Agentforce_SDO_CustomAssetPermissions --target-org myorg
 ```
 
 5. **Configure Agentforce:**

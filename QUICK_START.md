@@ -40,7 +40,7 @@ This deploys:
 
 ## Step 4: Assign the Permission Set (CRITICAL!)
 
-The `Agent_Actions` permission set is **essential** - it grants access to all Apex classes, objects, and fields. Without it, agents won't be able to use any of these actions.
+The `Agentforce_SDO_CustomAssetPermissions` permission set is **essential** - it grants access to all Apex classes, objects, and fields. Without it, agents won't be able to use any of these actions.
 
 ### Option A: Using the Deployment Script (Recommended)
 
@@ -50,23 +50,23 @@ The `Agent_Actions` permission set is **essential** - it grants access to all Ap
 
 This script will:
 1. Deploy all metadata
-2. Assign the `Agent_Actions` permission set to your user
+2. Assign the `Agentforce_SDO_CustomAssetPermissions` permission set to your user
 3. Verify the assignment
 
 ### Option B: Manual Assignment
 
 ```bash
 # Assign to your current user
-sf org assign permset --name Agent_Actions --target-org myorg
+sf org assign permset --name Agentforce_SDO_CustomAssetPermissions --target-org myorg
 
 # Or assign to a specific user
-sf org assign permset --name Agent_Actions --on-behalf-of user@example.com --target-org myorg
+sf org assign permset --name Agentforce_SDO_CustomAssetPermissions --on-behalf-of user@example.com --target-org myorg
 ```
 
 ### Option C: Via Salesforce UI
 
 1. Go to Setup → Users → Permission Sets
-2. Find "Agent_Actions"
+2. Find "Agentforce SDO Custom Asset Permissions"
 3. Click "Manage Assignments"
 4. Add your user (or users who will use Agentforce)
 
@@ -105,7 +105,7 @@ sf apex run --file scripts/apex/populate-distribution-centers.apex --target-org 
 ## Troubleshooting
 
 ### "Permission denied" or "Insufficient access"
-- **Solution**: Make sure you've assigned the `Agent_Actions` permission set (Step 4)
+- **Solution**: Make sure you've assigned the `Agentforce_SDO_CustomAssetPermissions` permission set (Step 4)
 
 ### "Action not found" in Agentforce
 - **Solution**: Verify the deployment succeeded (Step 3) and refresh the Actions tab in Agentforce
@@ -127,4 +127,4 @@ sf apex run --file scripts/apex/populate-distribution-centers.apex --target-org 
 
 ---
 
-**Remember**: The `Agent_Actions` permission set is critical! Without it, none of the actions will work.
+**Remember**: The `Agentforce_SDO_CustomAssetPermissions` permission set is critical! Without it, none of the actions will work.
