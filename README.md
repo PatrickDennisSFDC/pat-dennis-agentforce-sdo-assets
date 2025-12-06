@@ -1,4 +1,4 @@
-# Pat Dennis's Agentforce Assets
+# Agentforce SDO Assets
 
 A comprehensive library of production-ready Agentforce components for building intelligent AI agents on Salesforce. This repository provides reusable Apex actions, utilities, and configurations that accelerate Agentforce implementations for Salesforce employees, implementation partners, and customers.
 
@@ -119,8 +119,8 @@ System suggests commonly-used fields when minimal data is provided:
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/PatrickDennisSFDC/pat-dennis-agentforce-assets.git
-cd pat-dennis-agentforce-assets
+git clone https://github.com/PatrickDennisSFDC/agentforce-sdo-assets.git
+cd agentforce-sdo-assets
 ```
 
 2. **Authenticate with your org:**
