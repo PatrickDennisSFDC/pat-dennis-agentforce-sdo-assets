@@ -1,123 +1,287 @@
-# AF Controllers for Agentforce - Setup Guide
+# Agentforce Actions Setup Guide
 
-## ✅ What's Been Created
+## ✅ What's Included
 
-Three new AuraEnabled controller classes with the "AF" prefix for Agentforce integration:
+This repository provides **7 consolidated invocable action classes** for Agentforce, each supporting all CRUD operations (Create, Read, Update, Delete, Find) in a single class:
 
-1. **AFAccountController** - Account CRUD operations
-2. **AFContactController** - Contact CRUD operations
-3. **AFCaseController** - Case CRUD operations
+1. **AFAccountAction** - Account management with ambiguity handling
+2. **AFContactAction** - Contact operations with email/name resolution
+3. **AFCaseAction** - Customer service case handling
+4. **AFOpportunityAction** - Sales pipeline management
+5. **AFTaskAction** - Activity and to-do management
+6. **AFMeetingAction** - Custom Meeting object for field sales (pharmaceutical/medical)
+7. **AFCustomerOrderAction** - Order management with nested line items
 
 All classes:
-- ✅ Use `@AuraEnabled` methods for native Agentforce integration
+- ✅ Use `@InvocableMethod` for native Agentforce integration
 - ✅ Have `with sharing` modifier (required for Agentforce)
-- ✅ Reuse existing `UniversalCrmRecordAction.processRequest()` logic
-- ✅ Include proper error handling with `AuraHandledException`
-- ✅ Support all CRUD operations (Create, Read, Update, Delete, List)
+- ✅ Support operation inference (automatically detect create/read/update/delete/find from context)
+- ✅ Include comprehensive labels and descriptions for AI agent guidance
+- ✅ Delegate to `AFUniversalCrmRecordAction` for core business logic
+- ✅ Handle ambiguous relationships (multiple matching records)
+- ✅ Support name-based record resolution (update by name, not just ID)
 
-## 📋 Available Methods
+## 🎯 Key Features
 
-### AFAccountController
-- `listAccounts(search, industry, billingCity, billingState, phone, recordLimit)` - List accounts
-- `getAccountById(accountId)` - Get account by ID
-- `createAccount(accountData)` - Create account(s) - supports bulk
-- `updateAccount(accountId, accountData)` - Update account
-- `deleteAccount(accountId)` - Delete account
+### Operation Inference
+Operations can be explicitly specified or automatically inferred:
+- **Has `fieldDataJson` + `recordId`** → Update
+- **Has `fieldDataJson` only** → Create
+- **Has `recordId` only** → Read
+- **Has `searchTerm` or `filtersJson`** → Find
+- **Has `recordId` only (no data/search)** → Delete
 
-### AFContactController
-- `listContacts(search, email, accountId, recordLimit)` - List contacts
-- `getContactById(contactId)` - Get contact by ID
-- `createContact(contactData)` - Create contact(s) - supports bulk and `accountName` resolution
-- `updateContact(contactId, contactData)` - Update contact - supports `accountName` resolution
-- `deleteContact(contactId)` - Delete contact
+### Ambiguity Handling
+When multiple records match (e.g., two "Bob Smith" contacts):
+- System detects the ambiguity
+- Returns a list of candidates with distinguishing details
+- Agent prompts user for clarification
+- Prevents silent errors from picking the wrong record
 
-### AFCaseController
-- `listCases(search, status, priority, accountId, recordLimit)` - List cases
-- `getCaseById(caseId)` - Get case by ID
-- `createCase(caseData)` - Create case(s) - supports bulk, `accountName`, and `contactNameOrEmail` resolution
-- `updateCase(caseId, caseData)` - Update case - supports `accountName` and `contactNameOrEmail` resolution
-- `deleteCase(caseId)` - Delete case
+### Name-Based Resolution
+Update records without knowing their ID:
+- `"Update the Acme Corp account status to Active"` ✅
+- System resolves "Acme Corp" to AccountId automatically
+- No need to lookup IDs first
 
-## 🚀 Next Steps: Generate OpenAPI Specs
+## 🚀 Deployment Steps
 
-Now that the classes are deployed, you need to generate OpenAPI specifications using the VS Code extension:
+### Step 1: Clone and Authenticate
 
-### Step 1: Generate OpenAPI for Each Class
+```bash
+# Clone the repository
+git clone https://github.com/PatrickDennisSFDC/pat-dennis-agentforce-sdo-assets.git
+cd pat-dennis-agentforce-sdo-assets
 
-1. **Open VS Code** in your project directory
-2. **For each class**, run the command:
-   - Open `AFAccountController.cls`
-   - Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
-   - Type: `SFDX: Create OpenAPI Document from this Class (Beta)`
-   - Select the `externalServicesRegistrations` folder
-   - Repeat for `AFContactController.cls` and `AFCaseController.cls`
-
-This will generate:
-- `AFAccountController.yaml`
-- `AFAccountController.externalServiceRegistration-meta.xml`
-- (and same for Contact and Case)
-
-### Step 2: Add Agentforce Extensions
-
-The generated OpenAPI specs will need Agentforce-specific extensions. You can:
-
-1. **Manually add** `x-sfdc` extensions to each YAML file, or
-2. **Use the helper script** (if we create one) to add them automatically
-
-Key extensions needed:
-```yaml
-x-sfdc:
-  topics:
-    - name: Account Management
-      description: Operations for managing Account records
-      instructions: Use this API when the user wants to find, create, update, or delete accounts.
-  agentInstructions:
-    listAccounts: "When retrieving accounts, if multiple matches are found, present all options and ask for more details."
-    # ... etc
+# Authenticate with your Salesforce org
+sf org login web --alias myorg
 ```
 
-### Step 3: Deploy OpenAPI Specs
+### Step 2: Deploy All Metadata
 
-1. Deploy the generated XML files:
-   ```bash
-   sf project deploy start --source-dir force-app/main/default/externalServicesRegistrations --target-org storm.779a9cfd695270@salesforce.com
-   ```
+Deploy all Agentforce assets to your org:
 
-2. **Register in API Catalog:**
-   - Go to Setup → API Catalog
-   - Select "AuraEnabled (Beta)" tab
-   - Your APIs should appear there
+```bash
+sf project deploy start --source-dir force-app/main/default --target-org myorg
+```
 
-3. **Create Agent Actions:**
-   - Go to Setup → Agentforce Assets → Actions tab
-   - Click "New Agent Action"
-   - Select "Apex Reference" type
-   - Choose your AF controllers and their methods
+This deploys:
+- All 7 consolidated action classes
+- Core utilities (`AFUniversalCrmRecordAction`, `AFUniversalAnalyticsAction`)
+- Custom objects and fields (`Meeting__c`, `CustomerOrders__c`, `Customer_Order_Line_Item__c`)
+- Permission sets
+- Page layouts
 
-## 🎯 Benefits of This Approach
+### Step 3: Assign Permission Set (CRITICAL!)
 
-1. **Native Integration** - Built specifically for Agentforce
-2. **Auto-Generated Specs** - VS Code extension handles OpenAPI generation
-3. **Type Safety** - Strongly-typed parameters and return values
-4. **Clear Naming** - "AF" prefix makes it obvious these are for Agentforce
-5. **Reuses Logic** - All business logic stays in `UniversalCrmRecordAction`
-6. **Better Error Handling** - `AuraHandledException` provides clear error messages
+The `AgentCourseSDOCustomAssetPermissions` permission set is **essential** - it grants access to all Apex classes, objects, and fields. Without it, agents won't be able to use any of these actions.
 
-## 📝 Notes
+**Option A: Using the Deployment Script (Recommended)**
 
-- The `limit` parameter was renamed to `recordLimit` because `limit` is a reserved keyword in Apex
-- All methods support the same features as the REST API (search, filters, bulk operations, related record resolution)
-- The classes maintain the same business logic and behavior as the REST endpoints
+```bash
+./deploy.sh myorg
+```
 
-## 🔄 Migration Path
+**Option B: Manual Assignment**
 
-You can keep both approaches:
-- **REST API** (`AccountResource`, etc.) - For external integrations
-- **AF Controllers** (`AFAccountController`, etc.) - For Agentforce
+```bash
+# Assign to your current user
+sf org assign permset --name AgentCourseSDOCustomAssetPermissions --target-org myorg
 
-Both call the same `UniversalCrmRecordAction.processRequest()` method, so you maintain a single source of truth for business logic.
+# Or assign to a specific user
+sf org assign permset --name AgentCourseSDOCustomAssetPermissions --on-behalf-of user@example.com --target-org myorg
+```
 
+**Option C: Via Salesforce UI**
 
+1. Go to **Setup → Users → Permission Sets**
+2. Find **"Agentforce SDO Custom Asset Permissions"**
+3. Click **"Manage Assignments"**
+4. Add your user (or users who will use Agentforce)
 
+### Step 4: Configure Agentforce Agent
 
+1. Navigate to **Setup → Agentforce Agents**
+2. Create a new agent or edit an existing one
+3. Go to the **Actions** tab (or **Topics** → **General CRM Updates**)
+4. Click **"Add Action"** or **"New Action"**
+5. Search for the deployed actions:
+   - Search for "Account Action" → Select `AFAccountAction`
+   - Search for "Contact Action" → Select `AFContactAction`
+   - Search for "Case Action" → Select `AFCaseAction`
+   - Search for "Opportunity Action" → Select `AFOpportunityAction`
+   - Search for "Task Action" → Select `AFTaskAction`
+   - Search for "Meeting Action" → Select `AFMeetingAction`
+   - Search for "Customer Order Action" → Select `AFCustomerOrderAction`
+6. Add the actions you want your agent to use
 
+**Note**: Each action supports all CRUD operations. You don't need separate actions for create/read/update/delete - the agent will infer the operation from context.
+
+## 📋 Available Operations
+
+Each action class supports these operations:
+
+### Create
+- Create single or multiple records
+- Field enrichment suggestions
+- Preview mode (`confirm=false`) to see what would be created
+- Related record resolution (e.g., specify Account by name)
+
+### Read
+- Retrieve complete record details by ID
+- Includes all fields and related data
+- Returns structured Account/Contact/etc. object
+
+### Update
+- Update by record ID or by name (automatic resolution)
+- Supports partial updates (only specify fields to change)
+- Preview mode available
+- Related record resolution
+
+### Delete
+- Safe deletion with two-step confirmation
+- First call with `confirm=false` returns confirmation message
+- Second call with `confirm=true` actually deletes
+- Cascade handling for related records
+
+### Find
+- Intelligent search with `searchTerm` (searches multiple fields)
+- Exact-match filters via `filtersJson`
+- Returns list of matching records
+- Ambiguity handling for multiple matches
+
+## 🎯 Usage Examples
+
+### Example 1: Create Account
+**Agent prompt**: *"Create an account called Acme Corp in the Technology industry"*
+
+**Action call**:
+- Operation: `create` (or inferred)
+- `fieldDataJson`: `{"Name":"Acme Corp","Industry":"Technology"}`
+- `confirm`: `true`
+
+**Result**: Account created, returns Account record with ID
+
+### Example 2: Find Contact with Ambiguity
+**Agent prompt**: *"Find Bob Smith"*
+
+**Action call**:
+- Operation: `find` (or inferred)
+- `searchTerm`: `"Bob Smith"`
+
+**If multiple matches**:
+- Returns `candidates` list with details
+- Agent asks: "I found 2 contacts named Bob Smith. Which one? (1) Bob Smith at Acme Corp, (2) Bob Smith at Globex Inc."
+
+### Example 3: Update by Name
+**Agent prompt**: *"Change Acme Corp's industry to Manufacturing"*
+
+**Action call**:
+- Operation: `update` (or inferred)
+- `fieldDataJson`: `{"Name":"Acme Corp","Industry":"Manufacturing"}`
+- System automatically resolves "Acme Corp" to AccountId
+- `confirm`: `true`
+
+**Result**: Account updated successfully
+
+### Example 4: Create Customer Order with Line Items
+**Agent prompt**: *"Create an order for Acme Corp with 3 items: Widget A (qty 10), Widget B (qty 5)"*
+
+**Action call**:
+- Operation: `create`
+- `fieldDataJson`: `{"Account__c":"Acme Corp","LineItemsJson":"[{\"Product__c\":\"Widget A\",\"Quantity__c\":10},{\"Product__c\":\"Widget B\",\"Quantity__c\":5}]"}`
+- `confirm`: `true`
+
+**Result**: Order and line items created in single transaction
+
+## 🔧 Schema Configuration
+
+When adding actions to an agent, the system automatically generates schema files (`input/schema.json` and `output/schema.json`) based on the Apex class `@InvocableVariable` annotations. These schemas:
+
+- Define input/output structure for the agent
+- Include labels and descriptions from Apex classes
+- Control UI behavior with `copilotAction` flags:
+  - `copilotAction:isUserInput` - Controls whether field appears as form input (set to `false` for conversational experience)
+  - `copilotAction:isDisplayable` - Controls whether output is shown directly (set to `false` for conversational responses)
+  - `copilotAction:isUsedByPlanner` - Indicates if planner should use output for reasoning (set to `true`)
+
+**Best Practice**: All input fields should have `copilotAction:isUserInput: false` to promote conversational interaction. The agent should extract parameters from natural language rather than presenting forms.
+
+## 🎓 Best Practices
+
+### For AI Agents
+
+1. **Ask for Clarification First**: If a user says "look up an account" without details, ask for the account name or other identifying information BEFORE calling the find action.
+
+2. **Use Operation Inference**: Don't always specify `operation` explicitly - let the system infer from context when possible.
+
+3. **Handle Ambiguity**: When `candidates` are returned, present them to the user and ask for clarification rather than picking the first one.
+
+4. **Preview Before Commit**: For create/update operations, consider using `confirm=false` first to show what would be created, then ask the user to confirm.
+
+5. **Use Natural Language**: Extract field values from natural language (e.g., "lunch" → "In-Person Visit" for Meeting Type) rather than requiring exact picklist values.
+
+### For Developers
+
+1. **Read the Apex Class Descriptions**: The `@InvocableMethod` descriptions contain detailed guidance for agents. Keep them updated.
+
+2. **Test Operation Inference**: Verify that operations are correctly inferred from various input combinations.
+
+3. **Handle Edge Cases**: Test ambiguity scenarios, empty results, and error conditions.
+
+4. **Monitor Agent Behavior**: Watch how agents use these actions and refine descriptions based on actual usage.
+
+## 🐛 Troubleshooting
+
+### "Permission denied" or "Insufficient access"
+- **Solution**: Make sure you've assigned the `AgentCourseSDOCustomAssetPermissions` permission set (Step 3)
+
+### "Action not found" in Agentforce
+- **Solution**: Verify the deployment succeeded (Step 2) and refresh the Actions tab in Agentforce
+
+### "Object not found" errors
+- **Solution**: Ensure custom objects (`Meeting__c`, `CustomerOrders__c`) were deployed successfully
+
+### Agent keeps asking for the same information
+- **Solution**: Check that `copilotAction:isUserInput` is set to `false` in schema files to enable conversational extraction
+
+### Operation inference not working
+- **Solution**: Verify you're providing the correct input parameters. Check the `@InvocableMethod` description in the Apex class for guidance.
+
+## 📚 Additional Resources
+
+- **README.md** - Comprehensive repository documentation
+- **AGENT_CONTEXT.md** - Detailed architecture and design patterns
+- **AGENT_RULES.md** - Coding guidelines and best practices
+- **QUICK_START.md** - Quick deployment guide
+
+## 🔄 Architecture Overview
+
+```
+Agentforce Agent
+    ↓
+AFAccountAction (or other action class)
+    ↓
+AFUniversalCrmRecordAction (core business logic)
+    ↓
+Salesforce Database
+```
+
+All action classes delegate to `AFUniversalCrmRecordAction` for:
+- Dynamic SOQL generation
+- Field enrichment suggestions
+- Ambiguous relationship detection
+- Name-based record resolution
+- Transaction management
+
+This architecture ensures:
+- ✅ Single source of truth for business logic
+- ✅ Consistent behavior across all objects
+- ✅ Easy maintenance and updates
+- ✅ Reusable patterns for new objects
+
+---
+
+**Remember**: The `AgentCourseSDOCustomAssetPermissions` permission set is critical! Without it, none of the actions will work.
+
+*Last Updated: December 2024*
