@@ -451,7 +451,7 @@ public with sharing class AFUniversalCrmRecordAction {
         
         res.record = record;
         res.recordId = record.Id;
-        res.message = req.objectApiName + ' record created successfully with ID: ' + record.Id;
+        res.message = req.objectApiName + ' record created successfully.';
         System.debug(LoggingLevel.INFO, 'AFUniversalCrmRecordAction: Created record with ID: ' + record.Id);
     }
     

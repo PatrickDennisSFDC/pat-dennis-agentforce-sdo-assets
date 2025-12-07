@@ -208,6 +208,9 @@ When deploying a new action with schema files:
 
 - [ ] Apex class has comprehensive `@InvocableMethod` description
 - [ ] All `@InvocableVariable` have labels and descriptions
+- [ ] Success messages don't include record IDs or other technical details
+- [ ] Output schema descriptions explicitly state when outputs are internal-only
+- [ ] `recordId` output variable description includes "DO NOT mention to users"
 - [ ] Schema files created with proper directory structure
 - [ ] Schema flags set appropriately (mostly `false` for inputs)
 - [ ] API version is 65.0+ in `sfdx-project.json`
@@ -216,6 +219,24 @@ When deploying a new action with schema files:
 - [ ] Test that agent can use the action conversationally
 - [ ] Verify planner service recognizes the action
 
+### User-Facing vs. Internal Outputs
+
+**Rule:** Distinguish between outputs that inform the agent's response vs. outputs that should be displayed directly.
+
+- **Internal outputs** (most outputs): `copilotAction:isDisplayable: false`, `copilotAction:isUsedByPlanner: true`
+  - Agent uses these to craft natural responses
+  - Examples: `recordId`, `success`, `previewOnly`, `ambiguous`, etc.
+  
+- **User-facing outputs** (rarely needed): `copilotAction:isDisplayable: true`
+  - Only use when you want raw data displayed
+  - Typically not needed for conversational agents
+
+**Record IDs:**
+- Always internal-only
+- Never include in success messages
+- Never mention to users
+- Use internally for follow-up operations
+
 ### Common Schema Configuration Mistakes
 
 **Don't:**
@@ -223,12 +244,15 @@ When deploying a new action with schema files:
 - Overuse `copilotAction:isUserInput: true` (breaks conversational experience)
 - Deploy planner bundle without schema files
 - Use API version < 65.0 for GenAiPlannerBundle
+- Include record IDs in success messages
+- Mention record IDs to users in conversational responses
 
 **Do:**
 - Keep most inputs as `copilotAction:isUserInput: false`
 - Guide agents in Apex descriptions, not just schema
 - Test visibility and usability after deployment
 - Use emphasis words ("IMPORTANT", "BEFORE calling") in descriptions
+- Keep success messages user-friendly without technical details
 
 ## Important Notes
 
