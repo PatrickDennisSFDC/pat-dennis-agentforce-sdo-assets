@@ -263,12 +263,12 @@ For questions, issues, or feature requests, please contact Patrick Dennis or ope
 
 **Built with ❤️ for the Agentforce community**
 
-*Last Updated: December 2024*
+*Last Updated: December 2025*
 
 ## 📋 Recent Updates
 
-- **December 2024**: Added "Agentforce" prefix to all action labels for better branding and discoverability
-- **December 2024**: Updated debug email to use org owner's email (with fallback to running user) instead of hardcoded address
-- **December 2024**: Repository cleanup - removed org-specific agent configurations (planner bundles, bot metadata, GenAI plugins), keeping only reusable assets
-- **December 2024**: Updated to API version 65.0
-- **December 2024**: Added AFUniversalAnalyticsAction for dynamic aggregate queries
+- **December 2025**: Added "Agentforce" prefix to all action labels for better branding and discoverability
+- **December 2025**: Updated debug email to use org owner's email (with fallback to running user) instead of hardcoded address
+- **December 2025**: Repository cleanup - removed org-specific agent configurations (planner bundles, bot metadata, GenAI plugins), keeping only reusable assets
+- **December 2025**: Updated to API version 65.0
+- **December 2025**: Added AFUniversalAnalyticsAction for dynamic aggregate queries
