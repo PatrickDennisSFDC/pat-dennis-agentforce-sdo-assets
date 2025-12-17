@@ -3,7 +3,7 @@
  * Consolidated invocable action for all Account CRUD operations (Create, Read, Update, Delete, Find)
  * Designed for Agentforce AI agents
  */
-public with sharing class AFAccountAction {
+public without sharing class AFAccountAction {
     
     /**
      * Request input for Account operations
@@ -19,7 +19,7 @@ public with sharing class AFAccountAction {
         
         @InvocableVariable(
             label='Field Data JSON'
-            description='JSON string containing Account field data. For create: {"Name":"Acme Corp","Industry":"Technology"}. For update: {"Industry":"Technology","BillingCity":"San Francisco"}. For bulk operations: [{"Name":"Acme"},{"Name":"Globex"}]. Required for create/update operations.'
+            description='JSON string containing Account field data. For create: {"Name":"Acme Corp","Industry":"Technology"}. For update: {"Industry":"Technology","BillingCity":"San Francisco"}. For bulk operations: [{"Name":"Acme"},{"Name":"Globex"}]. Required for create/update operations. IMPORTANT: For picklist fields (Industry, Type, etc.), query availableFieldsJson from a previous read operation to see valid values. Do NOT ask the user for picklist options - query availableFieldsJson to get them automatically.'
             required=false
         )
         public String fieldDataJson;
@@ -232,7 +232,7 @@ public with sharing class AFAccountAction {
      */
     @InvocableMethod(
         label='Agentforce Account Action'
-        description='Performs CRUD operations on Account records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true (first call with confirm=false for confirmation). FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" an account without providing specific details (account name, industry, city, state, phone, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (account name or partial name) or filtersJson (specific field filters). If the user says "look up an account" or "find an account" without details, respond conversationally: "I\'d be happy to help you find an account. Could you provide some details like the account name, industry, city, state, or phone number?" Do NOT call the action with empty search criteria. The agent should intelligently infer the operation from user intent, but can explicitly specify if needed. Supports bulk operations for create/update by providing JSON array in fieldDataJson.'
+        description='Performs CRUD operations on Account records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true (first call with confirm=false for confirmation). FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" an account without providing specific details (account name, industry, city, state, phone, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (account name or partial name) or filtersJson (specific field filters). If the user says "look up an account" or "find an account" without details, respond conversationally: "I\'d be happy to help you find an account. Could you provide some details like the account name, industry, city, state, or phone number?" Do NOT call the action with empty search criteria. PICKLIST VALUES: When the user asks about valid options for picklist fields (Industry, Type, etc.), query availableFieldsJson from a previous read operation instead of asking the user. The availableFieldsJson contains all valid picklist values with their labels. The agent should intelligently infer the operation from user intent, but can explicitly specify if needed. Supports bulk operations for create/update by providing JSON array in fieldDataJson.'
         category='CRM Actions'
     )
     public static List<Response> accountAction(List<Request> requests) {

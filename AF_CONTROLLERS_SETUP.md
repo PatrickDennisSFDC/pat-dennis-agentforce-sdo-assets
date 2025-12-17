@@ -2,19 +2,23 @@
 
 ## ✅ What's Included
 
-This repository provides **7 consolidated invocable action classes** for Agentforce, each supporting all CRUD operations (Create, Read, Update, Delete, Find) in a single class:
+This repository provides **8 consolidated invocable action classes** for Agentforce, each supporting all CRUD operations (Create, Read, Update, Delete, Find) in a single class:
 
 1. **AFAccountAction** - Account management with ambiguity handling
 2. **AFContactAction** - Contact operations with email/name resolution
-3. **AFCaseAction** - Customer service case handling
-4. **AFOpportunityAction** - Sales pipeline management
-5. **AFTaskAction** - Activity and to-do management
-6. **AFMeetingAction** - Custom Meeting object for field sales (pharmaceutical/medical)
-7. **AFCustomerOrderAction** - Order management with nested line items
+3. **AFLeadAction** - Lead management (Company + LastName required) with name/email/company search
+4. **AFCaseAction** - Customer service case handling
+5. **AFOpportunityAction** - Sales pipeline management
+6. **AFTaskAction** - Activity and to-do management
+7. **AFMeetingAction** - Custom Meeting object for field sales (pharmaceutical/medical)
+8. **AFCustomerOrderAction** - Order management with nested line items
+
+In addition, there is one **specialized domain action**:
+
+- **AFPotentialAdverseEventAction** - CRUD/find for `Potential_Adverse_Event__c`, capturing structured potential adverse event reports with account/contact lookups and semantic field mapping
 
 All classes:
 - ✅ Use `@InvocableMethod` for native Agentforce integration
-- ✅ Have `with sharing` modifier (required for Agentforce)
 - ✅ Support operation inference (automatically detect create/read/update/delete/find from context)
 - ✅ Include comprehensive labels and descriptions for AI agent guidance
 - ✅ Delegate to `AFUniversalCrmRecordAction` for core business logic
@@ -108,11 +112,13 @@ sf org assign permset --name AgentCourseSDOCustomAssetPermissions --on-behalf-of
 5. Search for the deployed actions:
    - Search for "Agentforce Account Action" → Select `AFAccountAction`
    - Search for "Agentforce Contact Action" → Select `AFContactAction`
+   - Search for "Agentforce Lead Action" → Select `AFLeadAction`
    - Search for "Agentforce Case Action" → Select `AFCaseAction`
    - Search for "Agentforce Opportunity Action" → Select `AFOpportunityAction`
    - Search for "Agentforce Task Action" → Select `AFTaskAction`
    - Search for "Agentforce Meeting Action" → Select `AFMeetingAction`
    - Search for "Agentforce Customer Order Action" → Select `AFCustomerOrderAction`
+   - Search for "Agentforce Potential Adverse Event Action" → Select `AFPotentialAdverseEventAction`
 6. Add the actions you want your agent to use
 
 **Note**: Each action supports all CRUD operations. You don't need separate actions for create/read/update/delete - the agent will infer the operation from context.

@@ -3,7 +3,7 @@
  * Consolidated invocable action for all Task CRUD operations (Create, Read, Update, Delete, Find)
  * Designed for Agentforce AI agents
  */
-public with sharing class AFTaskAction {
+public without sharing class AFTaskAction {
     
     public class Request {
         @InvocableVariable(
@@ -14,7 +14,7 @@ public with sharing class AFTaskAction {
         
         @InvocableVariable(
             label='Field Data JSON'
-            description='JSON string containing Task field data. For create: {"Subject":"Follow up with John","Priority":"High","ActivityDate":"2024-12-10"}. For update: {"Status":"Completed"}. For bulk: [{"Subject":"Task 1"},{"Subject":"Task 2"}].'
+            description='JSON string containing Task field data. For create: {"Subject":"Follow up with John","Priority":"High","ActivityDate":"2024-12-10"}. For update: {"Status":"Completed","Priority":"Low"}. For bulk: [{"Subject":"Task 1"},{"Subject":"Task 2"}]. IMPORTANT: For picklist fields (Status, Priority, Type, etc.), query availableFieldsJson from a previous read operation to see valid values. Do NOT ask the user for picklist options - query availableFieldsJson to get them automatically. If the user wants to update the Contact or Account on the task, use the contactNameOrEmail or accountName parameters instead of putting WhoId or WhatId in fieldDataJson.'
         )
         public String fieldDataJson;
         
@@ -44,13 +44,13 @@ public with sharing class AFTaskAction {
         
         @InvocableVariable(
             label='Account Name'
-            description='Account name to resolve to WhatId for the Task. Links task to Account via WhatId.'
+            description='Account name to resolve to WhatId for the Task. Links task to Account via WhatId. IMPORTANT: When the user wants to add or update the account on a task (e.g., "update the account to Acme Corp"), use this parameter with the account name. Do NOT put WhatId in fieldDataJson - use this parameter instead. The system will automatically resolve the account name to an Account ID.'
         )
         public String accountName;
         
         @InvocableVariable(
             label='Contact Name or Email'
-            description='Contact name or email to resolve to WhoId for the Task. Links task to Contact via WhoId.'
+            description='Contact name or email to resolve to WhoId for the Task. Links task to Contact via WhoId. IMPORTANT: When the user wants to add or update the contact on a task (e.g., "add the contact as John Smith" or "update the contact to jane@example.com"), use this parameter with the contact name or email. Do NOT put WhoId in fieldDataJson - use this parameter instead. The system will automatically resolve the contact name/email to a Contact ID. If multiple contacts match, the system will return candidates for user clarification.'
         )
         public String contactNameOrEmail;
         
@@ -204,7 +204,7 @@ public with sharing class AFTaskAction {
     
     @InvocableMethod(
         label='Agentforce Task Action'
-        description='Performs CRUD operations on Task records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" a task without providing specific details (task subject, related to account/contact, status, due date, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (task subject or partial subject) or filtersJson (specific field filters). If the user says "look up a task" or "find a task" without details, respond conversationally: "I\'d be happy to help you find a task. Could you provide some details like the task subject, who it\'s related to (account or contact), status, or due date?" Do NOT call the action with empty search criteria. Supports accountName (WhatId) and contactNameOrEmail (WhoId) parameters to link Task to Account/Contact. Supports bulk operations.'
+        description='Performs CRUD operations on Task records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" a task without providing specific details (task subject, related to account/contact, status, due date, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (task subject or partial subject) or filtersJson (specific field filters). If the user says "look up a task" or "find a task" without details, respond conversationally: "I\'d be happy to help you find a task. Could you provide some details like the task subject, who it\'s related to (account or contact), status, or due date?" Do NOT call the action with empty search criteria. PICKLIST VALUES: When the user asks about valid options for picklist fields (Status, Priority, Type, etc.), query availableFieldsJson from a previous read operation instead of asking the user. The availableFieldsJson contains all valid picklist values with their labels. CONTACT/ACCOUNT UPDATES: When the user wants to add or update the Contact or Account on a task, use the contactNameOrEmail or accountName parameters (not WhoId or WhatId in fieldDataJson). These parameters support name-based resolution. Supports bulk operations.'
         category='CRM Actions'
     )
     public static List<Response> taskAction(List<Request> requests) {

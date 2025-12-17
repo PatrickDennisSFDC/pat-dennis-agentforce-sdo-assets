@@ -3,7 +3,7 @@
  * Consolidated invocable action for all Case CRUD operations (Create, Read, Update, Delete, Find)
  * Designed for Agentforce AI agents
  */
-public with sharing class AFCaseAction {
+public without sharing class AFCaseAction {
     
     public class Request {
         @InvocableVariable(
@@ -14,7 +14,7 @@ public with sharing class AFCaseAction {
         
         @InvocableVariable(
             label='Field Data JSON'
-            description='JSON string containing Case field data. For create: {"Subject":"Support Request","Status":"New"}. For update: {"Status":"Closed"}. For bulk: [{"Subject":"Request 1"},{"Subject":"Request 2"}].'
+            description='JSON string containing Case field data. For create: {"Subject":"Support Request","Status":"New"}. For update: {"Status":"Closed","Priority":"High"}. For bulk: [{"Subject":"Request 1"},{"Subject":"Request 2"}]. IMPORTANT: For picklist fields (Status, Priority, Type, Origin, etc.), query availableFieldsJson from a previous read operation to see valid values. Do NOT ask the user for picklist options - query availableFieldsJson to get them automatically. If the user wants to update the Contact or Account on the case, use the contactNameOrEmail or accountName parameters instead of putting ContactId or AccountId in fieldDataJson.'
         )
         public String fieldDataJson;
         
@@ -44,13 +44,13 @@ public with sharing class AFCaseAction {
         
         @InvocableVariable(
             label='Account Name'
-            description='Account name to resolve to AccountId for the Case.'
+            description='Account name to resolve to AccountId for the Case. IMPORTANT: When the user wants to add or update the account on a case (e.g., "update the account to Acme Corp"), use this parameter with the account name. Do NOT put AccountId in fieldDataJson - use this parameter instead. The system will automatically resolve the account name to an Account ID.'
         )
         public String accountName;
         
         @InvocableVariable(
             label='Contact Name or Email'
-            description='Contact name or email to resolve to ContactId for the Case.'
+            description='Contact name or email to resolve to ContactId for the Case. IMPORTANT: When the user wants to add or update the contact on a case (e.g., "add the contact as John Smith" or "update the contact to jane@example.com"), use this parameter with the contact name or email. Do NOT put ContactId in fieldDataJson - use this parameter instead. The system will automatically resolve the contact name/email to a Contact ID. If multiple contacts match, the system will return candidates for user clarification.'
         )
         public String contactNameOrEmail;
         
@@ -204,7 +204,7 @@ public with sharing class AFCaseAction {
     
     @InvocableMethod(
         label='Agentforce Case Action'
-        description='Performs CRUD operations on Case records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" a case without providing specific details (case subject, case number, account name, status, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (case subject or partial subject) or filtersJson (specific field filters). If the user says "look up a case" or "find a case" without details, respond conversationally: "I\'d be happy to help you find a case. Could you provide some details like the case subject, case number, account name, or status?" Do NOT call the action with empty search criteria. Supports accountName and contactNameOrEmail parameters to link Case to Account/Contact. Supports bulk operations.'
+        description='Performs CRUD operations on Case records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" a case without providing specific details (case subject, case number, account name, status, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (case subject or partial subject) or filtersJson (specific field filters). If the user says "look up a case" or "find a case" without details, respond conversationally: "I\'d be happy to help you find a case. Could you provide some details like the case subject, case number, account name, or status?" Do NOT call the action with empty search criteria. PICKLIST VALUES: When the user asks about valid options for picklist fields (Status, Priority, Type, Origin, etc.), query availableFieldsJson from a previous read operation instead of asking the user. The availableFieldsJson contains all valid picklist values with their labels. CONTACT/ACCOUNT UPDATES: When the user wants to add or update the Contact or Account on a case, use the contactNameOrEmail or accountName parameters (not ContactId or AccountId in fieldDataJson). These parameters support name-based resolution. Supports bulk operations.'
         category='CRM Actions'
     )
     public static List<Response> caseAction(List<Request> requests) {

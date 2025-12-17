@@ -3,7 +3,7 @@
  * Consolidated invocable action for all Meeting__c CRUD operations (Create, Read, Update, Delete, Find)
  * Designed for Agentforce AI agents
  */
-public with sharing class AFMeetingAction {
+public without sharing class AFMeetingAction {
     
     public class Request {
         @InvocableVariable(

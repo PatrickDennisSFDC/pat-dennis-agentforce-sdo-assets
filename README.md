@@ -17,12 +17,13 @@ This repository serves as a hub for high-quality Agentforce technology assets. W
 
 **Repository Focus**: This repository contains only reusable Agentforce assets - Apex classes, custom objects, permission sets, and documentation. Agent-specific configurations (planner bundles, bot metadata, GenAI plugins) are not included as they are org-specific and should be created per deployment.
 
-### 🤖 Consolidated CRUD Action Classes (8 Total)
+### 🤖 Consolidated CRUD & Analytics Action Classes (9 Total)
 
-Unified action classes that support all CRUD operations (Create, Read, Update, Delete, Find) for core CRM objects:
+Unified action classes that support all CRUD operations (Create, Read, Update, Delete, Find) for core CRM objects, plus one analytics action:
 
 - **AFAccountAction** - Full account management with ambiguity handling
 - **AFContactAction** - Contact operations with email/name resolution
+- **AFLeadAction** - Lead management (Company + LastName required) with name/email/company search
 - **AFOpportunityAction** - Sales pipeline management
 - **AFCaseAction** - Customer service case handling
 - **AFTaskAction** - Activity and to-do management
@@ -69,6 +70,7 @@ Custom exception class for handling scenarios where AI agents encounter multiple
 This repository includes custom objects designed for demo and POC environments. These objects are **not** part of standard Salesforce demo orgs or typical customer environments, making them ideal for quickly setting up proof-of-concepts with sample data:
 
 - **Meeting__c** - Purpose-built for pharmaceutical and medical device field sales scenarios
+- **Potential_Adverse_Event__c** - Captures structured reports of potential adverse events (e.g., products, species, dates, narrative description) for pharmacovigilance-style workflows
 - **Customer Order Line Item Enhancements** - Additional fields (Status, Distribution Center, Shipping Address) for order fulfillment demos
 
 These custom objects come with sample data population scripts to accelerate demo setup.
@@ -153,11 +155,13 @@ sf org assign permset --name AgentCourseSDOCustomAssetPermissions --target-org m
 - Search for actions with "Agentforce" prefix:
   - "Agentforce Account Action"
   - "Agentforce Contact Action"
+  - "Agentforce Lead Action"
   - "Agentforce Case Action"
   - "Agentforce Opportunity Action"
   - "Agentforce Task Action"
   - "Agentforce Meeting Action"
   - "Agentforce Customer Order Action"
+  - "Agentforce Potential Adverse Event Action"
   - "Agentforce Analytics Query"
 
 ### Optional: Populate Sample Data
@@ -206,11 +210,13 @@ System:
 |--------|--------|------|--------|--------|------|------------------|
 | Account | ✅ | ✅ | ✅ | ✅ | ✅ | Parent account resolution |
 | Contact | ✅ | ✅ | ✅ | ✅ | ✅ | Email/name search, account-scoped resolution |
+| Lead | ✅ | ✅ | ✅ | ✅ | ✅ | Name/email/company search; LastName + Company required on create |
 | Opportunity | ✅ | ✅ | ✅ | ✅ | ✅ | Stage tracking |
 | Case | ✅ | ✅ | ✅ | ✅ | ✅ | Priority handling |
 | Task | ✅ | ✅ | ✅ | ✅ | ✅ | WhoId/WhatId support |
 | Meeting__c | ✅ | ✅ | ✅ | ✅ | ✅ | Pharma field sales, semantic picklist inference |
 | CustomerOrders__c | ✅ | ✅ | ✅ | ✅ | ✅ | Nested line items, bulk line item operations |
+| Potential_Adverse_Event__c | ✅ | ✅ | ✅ | ✅ | ✅ | Structured potential adverse event reports with account/contact lookups and semantic field mapping |
 | Analytics | ✅ | ✅ | N/A | N/A | ✅ | Aggregate queries (SUM, COUNT, AVG, MIN, MAX, GROUP BY) |
 
 ## 🤝 Contributing
@@ -241,7 +247,7 @@ Complete account, contact, opportunity management with task/activity tracking, c
 - **API Version:** 65.0
 - **Language:** Apex
 - **Pattern:** Invocable Actions with `@InvocableMethod` annotation
-- **Security:** `with sharing` enforced for all action classes
+- **Security:** Action classes in this repo currently run `without sharing` (system mode) to simplify demo environments. For production implementations, we recommend switching to `with sharing` and tightening object/field permissions.
 - **Error Handling:** Debug emails automatically sent to org owner (falls back to running user)
 - **Test Coverage:** (Coming soon)
 
@@ -272,3 +278,5 @@ For questions, issues, or feature requests, please contact Patrick Dennis or ope
 - **December 2025**: Repository cleanup - removed org-specific agent configurations (planner bundles, bot metadata, GenAI plugins), keeping only reusable assets
 - **December 2025**: Updated to API version 65.0
 - **December 2025**: Added AFUniversalAnalyticsAction for dynamic aggregate queries
+- **December 2025**: Added AFLeadAction and extended AFUniversalCrmRecordAction to support Lead CRUD/find with name/email/company search
+ - **December 2025**: Added AFPotentialAdverseEventAction and extended AFUniversalCrmRecordAction to support Potential_Adverse_Event__c CRUD/find with semantic mapping and account/contact lookups

@@ -1,9 +1,9 @@
 /**
- * AF Opportunity Action
- * Consolidated invocable action for all Opportunity CRUD operations (Create, Read, Update, Delete, Find)
+ * AF Potential Adverse Event Action
+ * Consolidated invocable action for all Potential_Adverse_Event__c CRUD operations (Create, Read, Update, Delete, Find)
  * Designed for Agentforce AI agents
  */
-public without sharing class AFOpportunityAction {
+public without sharing class AFPotentialAdverseEventAction {
     
     public class Request {
         @InvocableVariable(
@@ -14,25 +14,26 @@ public without sharing class AFOpportunityAction {
         
         @InvocableVariable(
             label='Field Data JSON'
-            description='JSON string containing Opportunity field data. For create: {"Name":"New Deal","StageName":"Prospecting","CloseDate":"2024-12-31","Amount":50000}. For update: {"StageName":"Closed Won","Type":"New Business"}. For bulk: [{"Name":"Deal 1"},{"Name":"Deal 2"}]. IMPORTANT: For picklist fields (StageName, Type, LeadSource, etc.), query availableFieldsJson from a previous read operation to see valid values. Do NOT ask the user for picklist options - query availableFieldsJson to get them automatically.'
+            description='JSON string containing Potential Adverse Event field data. Required fields: Adverse_Event_Description__c. INTELLIGENT FIELD MAPPING: Use your semantic understanding to map natural language to structured fields. Example: {"Adverse_Event_Description__c":"Dog had a reaction after taking Product X","Species_Affected__c":"Canine","Product_Name__c":"Product X","Date_Product_Used__c":"2024-12-15"}. Query availableFieldsJson to see valid picklist options (e.g. Species_Affected__c). Use accountName or contactNameOrEmail to resolve lookups by name.'
+            required=false
         )
         public String fieldDataJson;
         
         @InvocableVariable(
             label='Record ID'
-            description='The Salesforce record ID of the Opportunity. Required for read/update/delete. Format: 18-character ID like "006xx000003DGbYAAW".'
+            description='The Salesforce record ID of the Potential Adverse Event. Required for read/update/delete. Format: 18-character ID.'
         )
         public Id recordId;
         
         @InvocableVariable(
             label='Search Term'
-            description='Text to search for in Opportunity fields (Name, Description, etc.). Used for find operations. IMPORTANT: If the user wants to find an opportunity but hasn\'t provided a search term, ask them for the opportunity name, account name, or other identifying information BEFORE calling this action. Do not call find operation without a searchTerm or filtersJson.'
+            description='Text to search for in Potential Adverse Event fields (Product_Name__c, Account_Number__c, etc.). Used for find operations. IMPORTANT: If the user wants to find a record but hasn\'t provided a search term, ask them for details first.'
         )
         public String searchTerm;
         
         @InvocableVariable(
             label='Filters JSON'
-            description='JSON string of exact-match filters for find operations. IMPORTANT: If the user wants to find an opportunity but hasn\'t provided specific filters, ask them for details like account name, stage, or amount range BEFORE calling this action. Do not call find operation without a searchTerm or filtersJson.'
+            description='JSON string of exact-match filters for find operations. IMPORTANT: If the user wants to find a record but hasn\'t provided specific filters, ask them for details first.'
         )
         public String filtersJson;
         
@@ -44,9 +45,15 @@ public without sharing class AFOpportunityAction {
         
         @InvocableVariable(
             label='Account Name'
-            description='Account name to resolve to AccountId for the Opportunity.'
+            description='Account name to resolve to Account__c lookup. If provided, system searches for an Account and links the record to it.'
         )
         public String accountName;
+        
+        @InvocableVariable(
+            label='Contact Name or Email'
+            description='Contact name or email to resolve to Contact__c lookup. If provided, system searches for a Contact and links the record to them.'
+        )
+        public String contactNameOrEmail;
         
         @InvocableVariable(
             label='Confirm'
@@ -64,15 +71,15 @@ public without sharing class AFOpportunityAction {
         
         @InvocableVariable(
             label='Record'
-            description='The Opportunity record (for single record operations).'
+            description='The Potential Adverse Event record (for single record operations).'
         )
-        public Opportunity record;
+        public Potential_Adverse_Event__c record;
         
         @InvocableVariable(
             label='Records'
-            description='List of Opportunity records (for bulk or find operations).'
+            description='List of Potential Adverse Event records (for bulk or find operations).'
         )
-        public List<Opportunity> records;
+        public List<Potential_Adverse_Event__c> records;
         
         @InvocableVariable(
             label='Record ID'
@@ -94,7 +101,7 @@ public without sharing class AFOpportunityAction {
         
         @InvocableVariable(
             label='Object Type'
-            description='The Salesforce object type, always "Opportunity" for Opportunity operations.'
+            description='The Salesforce object type, always "Potential_Adverse_Event__c".'
         )
         public String objectType;
         
@@ -160,7 +167,7 @@ public without sharing class AFOpportunityAction {
         
         @InvocableVariable(
             label='Total Matches'
-            description='Number of Opportunity records found in a find/search operation.'
+            description='Number of records found in a find/search operation.'
         )
         public Integer totalMatches;
         
@@ -197,18 +204,18 @@ public without sharing class AFOpportunityAction {
     }
     
     @InvocableMethod(
-        label='Agentforce Opportunity Action'
-        description='Performs CRUD operations on Opportunity records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" an opportunity without providing specific details (opportunity name, account name, stage, amount range, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (opportunity name or partial name) or filtersJson (specific field filters). If the user says "look up an opportunity" or "find an opportunity" without details, respond conversationally: "I\'d be happy to help you find an opportunity. Could you provide some details like the opportunity name, account name, stage, or amount range?" Do NOT call the action with empty search criteria. PICKLIST VALUES: When the user asks about valid options for picklist fields (StageName, Type, LeadSource, etc.), query availableFieldsJson from a previous read operation instead of asking the user. The availableFieldsJson contains all valid picklist values with their labels. Supports accountName parameter to link Opportunity to Account. Supports bulk operations.'
+        label='Agentforce Potential Adverse Event Action'
+        description='Performs CRUD operations on Potential_Adverse_Event__c records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" a record without providing specific details, you MUST ask the user for these details FIRST before calling this action. Supports accountName and contactNameOrEmail parameters to link to Account/Contact. Supports bulk operations.'
         category='CRM Actions'
     )
-    public static List<Response> opportunityAction(List<Request> requests) {
+    public static List<Response> potentialAdverseEventAction(List<Request> requests) {
         List<Response> responses = new List<Response>();
         
         for (Request req : requests) {
             Response res = new Response();
-            res.objectType = 'Opportunity';
+            res.objectType = 'Potential_Adverse_Event__c';
             res.success = false;
-            res.records = new List<Opportunity>();
+            res.records = new List<Potential_Adverse_Event__c>();
             res.totalMatches = 0;
             res.ambiguous = false;
             res.moreResultsAvailable = false;
@@ -230,17 +237,17 @@ public without sharing class AFOpportunityAction {
                     }
                     
                     try {
-                        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity WHERE Id = :req.recordId LIMIT 1];
-                        if (!opps.isEmpty()) {
-                            res.message = 'This will delete Opportunity \'' + opps[0].Name + '\' and all related records. Call again with confirm=true to proceed.';
+                        List<Potential_Adverse_Event__c> events = [SELECT Id, Name FROM Potential_Adverse_Event__c WHERE Id = :req.recordId LIMIT 1];
+                        if (!events.isEmpty()) {
+                            res.message = 'This will delete Potential Adverse Event \'' + events[0].Name + '\'. Call again with confirm=true to proceed.';
                             res.success = true;
                         } else {
-                            res.message = 'Opportunity not found with ID ' + req.recordId + '.';
+                            res.message = 'Record not found with ID ' + req.recordId + '.';
                             res.errorMessage = res.message;
                             res.success = false;
                         }
                     } catch (Exception e) {
-                        res.message = 'This will delete the Opportunity. Call again with confirm=true to proceed.';
+                        res.message = 'This will delete the Potential Adverse Event. Call again with confirm=true to proceed.';
                         res.success = true;
                     }
                     responses.add(res);
@@ -248,11 +255,12 @@ public without sharing class AFOpportunityAction {
                 }
                 
                 AFUniversalCrmRecordAction.Request actionReq = new AFUniversalCrmRecordAction.Request();
-                actionReq.objectApiName = 'Opportunity';
+                actionReq.objectApiName = 'Potential_Adverse_Event__c';
                 actionReq.operation = op;
                 actionReq.recordId = req.recordId;
                 actionReq.fieldDataJson = req.fieldDataJson;
                 actionReq.accountName = req.accountName;
+                actionReq.contactNameOrEmail = req.contactNameOrEmail;
                 actionReq.confirm = req.confirm;
                 actionReq.searchTerm = req.searchTerm;
                 actionReq.filtersJson = req.filtersJson;
@@ -268,7 +276,7 @@ public without sharing class AFOpportunityAction {
                             actionReq.fieldDataJson = null;
                         }
                     } catch (Exception e) {
-                        System.debug(LoggingLevel.DEBUG, 'AFOpportunityAction: fieldDataJson is not a bulk array, treating as single record');
+                        System.debug(LoggingLevel.DEBUG, 'AFPotentialAdverseEventAction: fieldDataJson is not a bulk array, treating as single record');
                     }
                 }
                 
@@ -289,13 +297,13 @@ public without sharing class AFOpportunityAction {
                     res.totalMatches = actionRes.totalMatches != null ? actionRes.totalMatches : 0;
                     
                     if (actionRes.record != null) {
-                        res.record = (Opportunity) actionRes.record;
+                        res.record = (Potential_Adverse_Event__c) actionRes.record;
                         res.recordId = res.record.Id;
-                        res.records = new List<Opportunity>{ res.record };
+                        res.records = new List<Potential_Adverse_Event__c>{ res.record };
                     } else if (actionRes.records != null && !actionRes.records.isEmpty()) {
-                        res.records = new List<Opportunity>();
+                        res.records = new List<Potential_Adverse_Event__c>();
                         for (SObject so : actionRes.records) {
-                            res.records.add((Opportunity) so);
+                            res.records.add((Potential_Adverse_Event__c) so);
                         }
                         if (res.records.size() == 1) {
                             res.record = res.records[0];
@@ -321,11 +329,11 @@ public without sharing class AFOpportunityAction {
             } catch (AFUniversalCrmRecordAction.ActionException ae) {
                 res.success = false;
                 res.errorMessage = ae.getMessage();
-                System.debug(LoggingLevel.ERROR, 'AFOpportunityAction: ActionException - ' + ae.getMessage());
+                System.debug(LoggingLevel.ERROR, 'AFPotentialAdverseEventAction: ActionException - ' + ae.getMessage());
             } catch (Exception e) {
                 res.success = false;
-                res.errorMessage = 'Error performing Opportunity operation: ' + e.getMessage();
-                System.debug(LoggingLevel.ERROR, 'AFOpportunityAction: Exception - ' + e.getMessage());
+                res.errorMessage = 'Error performing Potential Adverse Event operation: ' + e.getMessage();
+                System.debug(LoggingLevel.ERROR, 'AFPotentialAdverseEventAction: Exception - ' + e.getMessage());
             }
             
             responses.add(res);

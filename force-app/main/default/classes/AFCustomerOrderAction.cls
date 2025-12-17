@@ -4,7 +4,7 @@
  * Supports line item management within order operations
  * Designed for Agentforce AI agents
  */
-public with sharing class AFCustomerOrderAction {
+public without sharing class AFCustomerOrderAction {
     
     public class Request {
         @InvocableVariable(
@@ -15,7 +15,7 @@ public with sharing class AFCustomerOrderAction {
         
         @InvocableVariable(
             label='Field Data JSON'
-            description='JSON string containing Customer Order field data. For create: {"Name":"Q4 2024 Order","Status__c":"Draft","Order_Date__c":"2024-12-04"}. For update: {"Status__c":"Shipped"}. For bulk: [{"Name":"Order 1"},{"Name":"Order 2"}]. Required field: Name.'
+            description='JSON string containing Customer Order field data. For create: {"Name":"Q4 2024 Order","Status__c":"Draft","Order_Date__c":"2024-12-04"}. For update: {"Status__c":"Shipped","Priority__c":"High"}. For bulk: [{"Name":"Order 1"},{"Name":"Order 2"}]. Required field: Name. IMPORTANT: For picklist fields (Status__c, Priority__c, etc.), query availableFieldsJson from a previous read operation to see valid values. Do NOT ask the user for picklist options - query availableFieldsJson to get them automatically. If the user wants to update the Contact or Account on the order, use the contactNameOrEmail or accountName parameters instead of putting Contact__c or Account__c in fieldDataJson.'
             required=false
         )
         public String fieldDataJson;
@@ -46,13 +46,13 @@ public with sharing class AFCustomerOrderAction {
         
         @InvocableVariable(
             label='Account Name'
-            description='Account name to resolve to Account__c lookup. If provided, system searches for an Account and links the Order to it.'
+            description='Account name to resolve to Account__c lookup. If provided, system searches for an Account and links the Order to it. IMPORTANT: When the user wants to add or update the account on an order (e.g., "update the account to Omega Technologies"), use this parameter with the account name. Do NOT put Account__c in fieldDataJson - use this parameter instead. The system will automatically resolve the account name to an Account ID.'
         )
         public String accountName;
         
         @InvocableVariable(
             label='Contact Name or Email'
-            description='Contact name or email to resolve to Contact__c lookup. If provided, system searches for a Contact and links the Order to them.'
+            description='Contact name or email to resolve to Contact__c lookup. If provided, system searches for a Contact and links the Order to them. IMPORTANT: When the user wants to add or update the contact on an order (e.g., "add the contact as Lauren Bailey" or "update the contact to Bob Hodges"), use this parameter with the contact name or email. Do NOT put Contact__c in fieldDataJson - use this parameter instead. The system will automatically resolve the contact name/email to a Contact ID. If multiple contacts match, the system will return candidates for user clarification.'
         )
         public String contactNameOrEmail;
         
@@ -254,7 +254,7 @@ public with sharing class AFCustomerOrderAction {
     
     @InvocableMethod(
         label='Agentforce Customer Order Action'
-        description='Performs CRUD operations on CustomerOrders__c records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. Optionally provide lineItemsJson to create line items with the order. READ: Provide recordId. Automatically includes all line items. UPDATE: Provide recordId + fieldDataJson. Optionally provide addLineItemsJson, updateLineItemsJson, or deleteLineItemIds to manage line items. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" a customer order without providing specific details (order name, order number, account name, status, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (order name or order number) or filtersJson (specific field filters). If the user says "look up a customer order" or "find a customer order" without details, respond conversationally: "I\'d be happy to help you find a customer order. Could you provide some details like the order name, order number, account name, or status?" Do NOT call the action with empty search criteria. Supports accountName and contactNameOrEmail parameters to link Order to Account/Contact. Supports bulk operations for create/update.'
+        description='Performs CRUD operations on CustomerOrders__c records. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. Optionally provide lineItemsJson to create line items with the order. READ: Provide recordId. Automatically includes all line items. UPDATE: Provide recordId + fieldDataJson. Optionally provide addLineItemsJson, updateLineItemsJson, or deleteLineItemIds to manage line items. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user asks to "find" or "look up" a customer order without providing specific details (order name, order number, account name, status, etc.), you MUST ask the user for these details FIRST before calling this action. Only call this action with find operation when you have at least a searchTerm (order name or order number) or filtersJson (specific field filters). If the user says "look up a customer order" or "find a customer order" without details, respond conversationally: "I\'d be happy to help you find a customer order. Could you provide some details like the order name, order number, account name, or status?" Do NOT call the action with empty search criteria. PICKLIST VALUES: When the user asks about valid options for picklist fields (Status__c, Priority__c, etc.), query availableFieldsJson from a previous read operation instead of asking the user. The availableFieldsJson contains all valid picklist values with their labels. CONTACT/ACCOUNT UPDATES: When the user wants to add or update the Contact or Account on an order, use the contactNameOrEmail or accountName parameters (not Contact__c or Account__c in fieldDataJson). These parameters support name-based resolution. Supports bulk operations for create/update.'
         category='CRM Actions'
     )
     public static List<Response> customerOrderAction(List<Request> requests) {
@@ -504,6 +504,8 @@ public with sharing class AFCustomerOrderAction {
                     actionReq.searchTerm = req.searchTerm;
                     actionReq.filtersJson = req.filtersJson;
                     actionReq.searchLimit = req.searchLimit;
+                    actionReq.accountName = req.accountName;
+                    actionReq.contactNameOrEmail = req.contactNameOrEmail;
                     
                     AFUniversalCrmRecordAction.Response actionRes = AFUniversalCrmRecordAction.processRequest(actionReq);
                     

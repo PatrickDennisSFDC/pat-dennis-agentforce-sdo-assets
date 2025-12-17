@@ -15,7 +15,7 @@
  * - "How many accounts by industry?" → COUNT Id, GROUP BY Industry
  * - "Average deal size by stage" → AVG Amount, GROUP BY StageName
  */
-public with sharing class AFUniversalAnalyticsAction {
+public without sharing class AFUniversalAnalyticsAction {
     
     // Supported objects (same as AFUniversalCrmRecordAction)
     private static final Set<String> SUPPORTED_OBJECTS = new Set<String>{

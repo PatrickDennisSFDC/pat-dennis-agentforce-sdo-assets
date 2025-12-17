@@ -256,7 +256,7 @@ When deploying a new action with schema files:
 
 ## Important Notes
 
-- All classes use `with sharing` for security
+- For demo environments in this repo, action classes are configured `without sharing` (system mode) to avoid permission friction during testing. For production implementations, prefer `with sharing` and explicit object/field permissions.
 - All invocable variables must have `label` and `description` for agent understanding
 - Use JSON parameters (`fieldDataJson`, `filtersJson`) as preferred method (easier for agents)
 - Support both single and bulk operations where applicable
