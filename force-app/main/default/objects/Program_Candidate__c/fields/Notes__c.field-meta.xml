@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Notes__c</fullName>
+    <description>Rich text field for capturing relevant details, extra information, and summary of the engagement with the patient. Use this field to document overall interaction context, remarkable comments from the user, or any notable details that would be valuable for human users reviewing the record. Do NOT recount all field values - focus on interaction summary, context, and remarkable comments.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Use this field to capture a summary of the enrollment conversation, any remarkable comments from the patient, or context that would be valuable for human reviewers. Focus on interaction summary and notable details rather than recapping all field values.</inlineHelpText>
+    <label>Notes</label>
+    <length>32768</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Html</type>
+    <visibleLines>10</visibleLines>
+</CustomField>
