@@ -18,7 +18,7 @@ public without sharing class AFProgramCandidateAction {
         
         @InvocableVariable(
             label='Field Data JSON'
-            description='JSON string containing Program Candidate field data. All fields are optional - no required fields. CRITICAL FOR COMPLETE ENROLLMENT: You MUST collect insurance information (Insurance_Provider__c, Insurance_Policy_Number__c, Insurance_Group_Number__c) and eligibility information (Household_Size__c, Annual_Income__c) - these are essential for enrollment processing. Do not submit enrollment without asking for insurance information. Always ask: "Do you have your insurance card handy? I\'ll need your insurance provider name, policy number, and group number." Also ask: "To help determine eligibility, I\'ll need to know your household size and approximate annual income." INTELLIGENT FIELD MAPPING: Use your semantic understanding to map natural language to structured fields. Records are created incrementally as information is gathered during enrollment calls. COMPREHENSIVE FIELD MAPPING GUIDE: Basic Information: "First Name" → FirstName__c, "Last Name" → LastName__c, "Date of Birth" or "DOB" → Date_of_Birth__c (format: YYYY-MM-DD). Contact Information: "Phone" or "Phone Number" → Phone__c, "Email" or "Email Address" → Email__c, "Preferred Contact Method" → Preferred_Contact_Method__c (query availableFieldsJson for values: Phone, Email, Text, Mail), "Language" or "Language Preference" → Language_Preference__c (query availableFieldsJson for values: English (default), Spanish, French, German, Other). Address: "Street" or "Street Address" → Street__c, "City" → City__c, "State" → State__c, "Postal Code" or "ZIP Code" → Postal_Code__c, "Country" → Country__c (defaults to "United States" if not specified, no validation required). Program Information: "Program Name" or "Medication Name" or "Drug Name" → Program_Name__c (typically the prescribed drug/medication name, free-form text like "Product XYZ" or "Medication ABC"), "Status" or "Enrollment Status" → Enrollment_Status__c (defaults to "New Inquiry", query availableFieldsJson for all values: New Inquiry, Information Gathering, Eligibility Review, Approved, Enrollment Pending, Enrolled, Declined, On Hold). Eligibility (MUST COLLECT): "Household Size" → Household_Size__c (query availableFieldsJson for valid values: 1, 2, 3, 4, 5, 6, 7, 8 or more, Prefer not to answer), "Income" or "Annual Income" → Annual_Income__c (query availableFieldsJson for valid income range values: Less than $25,000, $25,000 - $49,999, $50,000 - $74,999, $75,000 - $99,999, $100,000 - $149,999, $150,000 - $199,999, $200,000 - $249,999, $250,000 or more, Prefer not to answer). Always ask: "To help determine eligibility, I\'ll need to know your household size and approximate annual income." Insurance Information (MUST COLLECT - KEY SEGMENT): Always ask for insurance information before submitting enrollment. "Insurance Provider" → Insurance_Provider__c, "Insurance Policy Number" or "Policy Number" or "Member ID" → Insurance_Policy_Number__c, "Insurance Group Number" or "Group Number" → Insurance_Group_Number__c. Prompt: "Do you have your insurance card handy? I\'ll need your insurance provider name, policy number, and group number." Account/Contact: Use accountName parameter for Account__c, contactNameOrEmail parameter for Contact__c (do NOT put Account__c or Contact__c in fieldDataJson). System uses best judgement to match by phone/email when creating records. Example: {"LastName__c":"Smith","FirstName__c":"John","Date_of_Birth__c":"1980-05-15","Phone__c":"555-123-4567","Email__c":"john.smith@example.com","Preferred_Contact_Method__c":"Phone","Language_Preference__c":"English","Street__c":"123 Main St","City__c":"San Francisco","State__c":"CA","Postal_Code__c":"94105","Country__c":"United States","Program_Name__c":"Product XYZ","Enrollment_Status__c":"New Inquiry","Household_Size__c":"3","Annual_Income__c":"75000_to_99999","Insurance_Provider__c":"Blue Cross Blue Shield","Insurance_Policy_Number__c":"POL123456","Insurance_Group_Number__c":"GRP789"}. Query availableFieldsJson to see valid picklist options (e.g. Enrollment_Status__c, Preferred_Contact_Method__c, Language_Preference__c, Household_Size__c, Annual_Income__c).'
+            description='JSON string containing Program Candidate field data. All fields are optional in Salesforce, but for COMPLETE ENROLLMENT you should collect ALL information before submitting. WORKFLOW: Always call with confirm=false FIRST to preview what would be created (this does NOT create the record). Check the response for suggestedFields and previewData. The system will tell you what fields are missing. Continue asking questions and calling with confirm=false until you have collected all available information. Only call with confirm=true when ready to submit. FIELD COLLECTION GUIDE - Collect in this order but be flexible based on user responses: (1) Basic Information: "First Name" → FirstName__c, "Last Name" → LastName__c, "Date of Birth" or "DOB" → Date_of_Birth__c (format: YYYY-MM-DD, accept "July 14 1997" and convert). (2) Contact Information: "Phone" or "Phone Number" → Phone__c, "Email" or "Email Address" → Email__c, "Preferred Contact Method" → Preferred_Contact_Method__c (query availableFieldsJson for values: Phone, Email, Text, Mail), "Language" or "Language Preference" → Language_Preference__c (query availableFieldsJson for values: English (default), Spanish, French, German, Other). (3) Address: Parse full addresses into "Street" or "Street Address" → Street__c, "City" → City__c, "State" → State__c, "Postal Code" or "ZIP Code" → Postal_Code__c, "Country" → Country__c (defaults to "United States" if not specified). (4) Program Information: "Program Name" or "Medication Name" or "Drug Name" → Program_Name__c (typically the prescribed drug/medication name). (5) Eligibility (ESSENTIAL - ask before submitting): "Household Size" → Household_Size__c (query availableFieldsJson for values: 1, 2, 3, 4, 5, 6, 7, 8 or more, Prefer not to answer), "Income" or "Annual Income" → Annual_Income__c (query availableFieldsJson for income ranges). Ask: "To help determine eligibility, I\'ll need to know your household size and approximate annual income." (6) Insurance Information (ESSENTIAL - ask before submitting): "Insurance Provider" → Insurance_Provider__c, "Insurance Policy Number" or "Policy Number" or "Member ID" → Insurance_Policy_Number__c, "Insurance Group Number" or "Group Number" → Insurance_Group_Number__c. Ask: "Do you have your insurance card handy? I\'ll need your insurance provider name, policy number, and group number." If user declines to provide insurance or eligibility, you can still submit but note it in your message. Account/Contact: Use accountName parameter for Account__c, contactNameOrEmail parameter for Contact__c (do NOT put Account__c or Contact__c in fieldDataJson). Example: {"LastName__c":"Smith","FirstName__c":"John","Date_of_Birth__c":"1980-05-15","Phone__c":"555-123-4567","Email__c":"john.smith@example.com","Preferred_Contact_Method__c":"Phone","Language_Preference__c":"English","Street__c":"123 Main St","City__c":"San Francisco","State__c":"CA","Postal_Code__c":"94105","Country__c":"United States","Program_Name__c":"Product XYZ","Enrollment_Status__c":"New Inquiry","Household_Size__c":"3","Annual_Income__c":"75000_to_99999","Insurance_Provider__c":"Blue Cross Blue Shield","Insurance_Policy_Number__c":"POL123456","Insurance_Group_Number__c":"GRP789"}. Query availableFieldsJson to see valid picklist options.'
             required=false
         )
         public String fieldDataJson;
@@ -61,7 +61,7 @@ public without sharing class AFProgramCandidateAction {
         
         @InvocableVariable(
             label='Confirm'
-            description='For create/update: Set to false to preview only without committing. Default (true): Commits immediately. For delete: Set to true to actually delete. Default (false): Returns confirmation message first. The agent should first call delete with confirm=false, ask the user, then call again with confirm=true if confirmed.'
+            description='For create operations: CRITICAL - Always set to false FIRST to preview what would be created. This does NOT create the record. Check the response for suggestedFields and previewData to see what information is missing. Continue asking questions and calling with confirm=false until you have collected all available information. Only set to true when you have gathered all information OR the user explicitly wants to submit with incomplete information. The system will validate completeness and guide you. For update: Set to false to preview only without committing. Default (true): Commits immediately. For delete: Set to true to actually delete. Default (false): Returns confirmation message first. The agent should first call delete with confirm=false, ask the user, then call again with confirm=true if confirmed.'
         )
         public Boolean confirm;
     }
@@ -117,7 +117,7 @@ public without sharing class AFProgramCandidateAction {
         
         @InvocableVariable(
             label='Preview Only'
-            description='True if this is a preview response (confirm=false was set). When true, no data was actually saved - this shows what would be created/updated. Use previewData to show the user what would happen.'
+            description='True if this is a preview response (confirm=false was set). When true, no data was actually saved - this shows what would be created/updated. CRITICAL: When previewOnly is true, check suggestedFields to see what fields are missing. Ask the user for missing information, especially insurance and eligibility fields. Continue collecting information and calling with confirm=false until you have all available information. Only call with confirm=true when ready to submit.'
         )
         public Boolean previewOnly;
         
@@ -129,7 +129,7 @@ public without sharing class AFProgramCandidateAction {
         
         @InvocableVariable(
             label='Suggested Fields'
-            description='List of commonly-used field API names that might be relevant to populate. Use this when enrichmentSuggested is true to suggest additional fields to the user.'
+            description='List of commonly-used field API names that might be relevant to populate. When previewOnly is true and enrichmentSuggested is true, this list shows fields that are missing. Ask the user for these missing fields before submitting. For Program Candidate enrollment, prioritize collecting: Insurance_Provider__c, Insurance_Policy_Number__c, Insurance_Group_Number__c, Household_Size__c, Annual_Income__c, and other contact/address fields.'
         )
         public List<String> suggestedFields;
         
@@ -209,7 +209,7 @@ public without sharing class AFProgramCandidateAction {
     
     @InvocableMethod(
         label='Agentforce Program Candidate Action'
-        description='Performs CRUD operations on Program_Candidate__c records for post-prescription support enrollment. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE: Provide fieldDataJson. CRITICAL: For complete enrollment, you MUST collect insurance information (Insurance_Provider__c, Insurance_Policy_Number__c, Insurance_Group_Number__c) and eligibility information (Household_Size__c, Annual_Income__c) - these are essential for enrollment processing. Do not submit enrollment without asking for insurance information. Records are created incrementally as information is gathered during enrollment. Records typically start in "New Inquiry" status. Before submitting, review collected information with the user. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user wants to find a record but hasn\'t provided a search term, ask them for details first. Search uses FirstName, LastName, and Email fields. Supports accountName and contactNameOrEmail parameters to link to Account/Contact. System uses best judgement to match by phone/email when creating records. Supports bulk operations.'
+        description='Performs CRUD operations on Program_Candidate__c records for post-prescription support enrollment. Operation can be explicitly specified (create, read, update, delete, find) or inferred from context. CREATE WORKFLOW - CRITICAL: For complete enrollment, you MUST collect ALL information before submitting. Use this workflow: (1) First, call with confirm=false to preview what would be created (this does NOT create the record). (2) Check the suggestedFields and previewData in the response to see what fields are missing. (3) Ask the user for missing information, especially insurance (Insurance_Provider__c, Insurance_Policy_Number__c, Insurance_Group_Number__c) and eligibility (Household_Size__c, Annual_Income__c) - these are essential. (4) Continue collecting information and calling with confirm=false until you have gathered all available information. (5) Only call with confirm=true when you have collected all information OR the user explicitly wants to submit with incomplete information. The system will validate completeness and guide you. For complete enrollment, collect: Basic Info (FirstName, LastName, DateOfBirth), Contact (Phone, Email, PreferredContactMethod, LanguagePreference), Address (Street, City, State, PostalCode, Country), Program (ProgramName), Eligibility (HouseholdSize, AnnualIncome), Insurance (Provider, PolicyNumber, GroupNumber). Records typically start in "New Inquiry" status. READ: Provide recordId. UPDATE: Provide recordId + fieldDataJson. DELETE: Provide recordId + confirm=true. FIND: IMPORTANT - Before calling find operation, ensure you have search criteria. If the user wants to find a record but hasn\'t provided a search term, ask them for details first. Search uses FirstName, LastName, and Email fields. Supports accountName and contactNameOrEmail parameters to link to Account/Contact. System uses best judgement to match by phone/email when creating records. Supports bulk operations.'
         category='CRM Actions'
     )
     public static List<Response> programCandidateAction(List<Request> requests) {
@@ -318,8 +318,69 @@ public without sharing class AFProgramCandidateAction {
                         res.recordId = actionRes.recordId;
                     }
                     
-                    // Customize message for create operations - make it user-friendly and check for missing fields
-                    if (op == 'create' && res.record != null) {
+                    // Handle preview mode - validate completeness and guide agent
+                    if (op == 'create' && res.previewOnly) {
+                        // Parse previewData to check for missing critical fields
+                        Map<String, Object> previewMap = new Map<String, Object>();
+                        try {
+                            if (!String.isBlank(res.previewData)) {
+                                previewMap = (Map<String, Object>) JSON.deserializeUntyped(res.previewData);
+                            }
+                        } catch (Exception e) {
+                            System.debug(LoggingLevel.DEBUG, 'AFProgramCandidateAction: Could not parse previewData');
+                        }
+                        
+                        List<String> missingCriticalFields = new List<String>();
+                        List<String> missingOtherFields = new List<String>();
+                        
+                        // Check for missing insurance information
+                        if (String.isBlank(String.valueOf(previewMap.get('Insurance_Provider__c')))) {
+                            missingCriticalFields.add('insurance provider');
+                        }
+                        if (String.isBlank(String.valueOf(previewMap.get('Insurance_Policy_Number__c')))) {
+                            missingCriticalFields.add('insurance policy number');
+                        }
+                        if (String.isBlank(String.valueOf(previewMap.get('Insurance_Group_Number__c')))) {
+                            missingCriticalFields.add('insurance group number');
+                        }
+                        
+                        // Check for missing eligibility information
+                        if (String.isBlank(String.valueOf(previewMap.get('Household_Size__c')))) {
+                            missingCriticalFields.add('household size');
+                        }
+                        if (String.isBlank(String.valueOf(previewMap.get('Annual_Income__c')))) {
+                            missingCriticalFields.add('annual income');
+                        }
+                        
+                        // Check for other important fields
+                        if (String.isBlank(String.valueOf(previewMap.get('Phone__c')))) {
+                            missingOtherFields.add('phone number');
+                        }
+                        if (String.isBlank(String.valueOf(previewMap.get('Email__c')))) {
+                            missingOtherFields.add('email address');
+                        }
+                        if (String.isBlank(String.valueOf(previewMap.get('Street__c')))) {
+                            missingOtherFields.add('address');
+                        }
+                        if (String.isBlank(String.valueOf(previewMap.get('Date_of_Birth__c')))) {
+                            missingOtherFields.add('date of birth');
+                        }
+                        
+                        // Build guidance message
+                        if (!missingCriticalFields.isEmpty()) {
+                            String criticalList = String.join(missingCriticalFields, ', ');
+                            res.message = 'I\'ve collected the information so far. However, to complete your enrollment, I still need your ' + criticalList + '. Please continue providing this information.';
+                            res.enrichmentSuggested = true;
+                        } else if (!missingOtherFields.isEmpty()) {
+                            String otherList = String.join(missingOtherFields, ', ');
+                            res.message = 'I\'ve collected most of the information. I could also use your ' + otherList + ' if you\'d like to provide it. Otherwise, I can submit your enrollment with what we have.';
+                            res.enrichmentSuggested = true;
+                        } else {
+                            res.message = 'I\'ve collected all the information for your enrollment. Would you like me to submit it now?';
+                        }
+                    }
+                    // Handle actual create (confirm=true) - user-friendly messages
+                    else if (op == 'create' && res.record != null && !res.previewOnly) {
                         Program_Candidate__c candidate = res.record;
                         List<String> missingFields = new List<String>();
                         
