@@ -2629,7 +2629,7 @@ public without sharing class AFUniversalCrmRecordAction {
             'meeting__c' => new List<String>{'Meeting_Type__c', 'Meeting_Outcome__c', 'Description__c', 'Product_Discussed__c', 'Attendees_Count__c'},
             'customerorders__c' => new List<String>{'Status__c', 'Order_Date__c', 'Priority__c', 'Requested_Delivery_Date__c', 'Shipping_Method__c', 'Order_Notes__c', 'PO_Number__c'},
             'customer_order_line_item__c' => new List<String>{'SKU__c', 'Fulfillment_Notes__c'},
-            'program_candidate__c' => new List<String>{'FirstName__c', 'LastName__c', 'Email__c', 'Phone__c', 'Date_of_Birth__c', 'Program_Name__c', 'Enrollment_Status__c', 'Household_Size__c', 'Annual_Income__c', 'Insurance_Provider__c'}
+            'program_candidate__c' => new List<String>{'Insurance_Provider__c', 'Insurance_Policy_Number__c', 'Insurance_Group_Number__c', 'Household_Size__c', 'Annual_Income__c', 'Preferred_Contact_Method__c', 'Language_Preference__c', 'Street__c'}
         };
         
         List<String> fieldsForObject = commonFields.get(obj);
