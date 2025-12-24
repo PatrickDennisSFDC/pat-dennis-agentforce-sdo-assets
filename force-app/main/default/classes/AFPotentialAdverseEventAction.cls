@@ -14,7 +14,7 @@ public without sharing class AFPotentialAdverseEventAction {
         
         @InvocableVariable(
             label='Field Data JSON'
-            description='JSON string containing Potential Adverse Event field data. Required fields: Adverse_Event_Description__c. INTELLIGENT FIELD MAPPING: Use your semantic understanding to map natural language to structured fields. Example: {"Adverse_Event_Description__c":"Dog had a reaction after taking Product X","Species_Affected__c":"Canine","Product_Name__c":"Product X","Date_Product_Used__c":"2024-12-15"}. Query availableFieldsJson to see valid picklist options (e.g. Species_Affected__c). Use accountName or contactNameOrEmail to resolve lookups by name.'
+            description='JSON string containing Potential Adverse Event field data. Required fields: Adverse_Event_Description__c. INTELLIGENT FIELD MAPPING: Use your semantic understanding to map natural language to structured fields. COMPREHENSIVE FIELD MAPPING GUIDE: Reporter Information: "Name of Submitter" or "Your Name" → Name_of_Submitter__c, "Reporting Party Name" or "Person Reporting" → Reporting_Party_Name__c, "Email" or "Customer Email" → Customer_Email__c or Reporting_Party_Email__c, "Phone" or "Reporting Party Phone" → Reporting_Party_Phone__c. Product Information: "Product Name" → Product_Name__c, "Manufacturer" or "Product Manufacturer" → Product_Manufacturer__c, "Lot Number" or "Product Lot #" → Product_Lot_Number__c, "Expiration Date" or "Product Expiration Date" → Product_Expiration_Date__c (format: YYYY-MM-DD), "Date Used" or "Date Product Used" → Date_Product_Used__c (format: YYYY-MM-DD). Event Details: "Species" or "Species Affected" → Species_Affected__c (query availableFieldsJson for valid values like "Canine", "Feline", etc.), "Breed" or "Breed of Animal" → Breed_of_Animal__c, "Description" or "Event Description" → Adverse_Event_Description__c. Account/Contact: Use accountName parameter for Account__c, contactNameOrEmail parameter for Contact__c (do NOT put Account__c or Contact__c in fieldDataJson). Example: {"Adverse_Event_Description__c":"Dog had a reaction after taking Product X","Species_Affected__c":"Canine","Product_Name__c":"Product X","Product_Manufacturer__c":"Zoetis","Product_Lot_Number__c":"12345","Product_Expiration_Date__c":"2026-09-05","Date_Product_Used__c":"2024-12-15","Name_of_Submitter__c":"Pat Dennis","Reporting_Party_Name__c":"Joe Dennis","Customer_Email__c":"patrick@example.com","Reporting_Party_Phone__c":"319-213-8976"}. Query availableFieldsJson to see valid picklist options (e.g. Species_Affected__c).'
             required=false
         )
         public String fieldDataJson;
@@ -342,4 +342,9 @@ public without sharing class AFPotentialAdverseEventAction {
         return responses;
     }
 }
+
+
+
+
+
 

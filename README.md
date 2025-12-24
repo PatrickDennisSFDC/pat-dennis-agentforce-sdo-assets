@@ -17,7 +17,7 @@ This repository serves as a hub for high-quality Agentforce technology assets. W
 
 **Repository Focus**: This repository contains only reusable Agentforce assets - Apex classes, custom objects, permission sets, and documentation. Agent-specific configurations (planner bundles, bot metadata, GenAI plugins) are not included as they are org-specific and should be created per deployment.
 
-### 🤖 Consolidated CRUD & Analytics Action Classes (9 Total)
+### 🤖 Consolidated CRUD & Analytics Action Classes (10 Total)
 
 Unified action classes that support all CRUD operations (Create, Read, Update, Delete, Find) for core CRM objects, plus one analytics action:
 
@@ -29,6 +29,7 @@ Unified action classes that support all CRUD operations (Create, Read, Update, D
 - **AFTaskAction** - Activity and to-do management
 - **AFMeetingAction** - Custom Meeting object for field sales (pharmaceutical/medical)
 - **AFCustomerOrderAction** - Order management with nested line items
+- **AFProgramCandidateAction** - Program candidate enrollment for post-prescription support programs (phone-based enrollment with comprehensive field mapping)
 - **AFUniversalAnalyticsAction** - Dynamic aggregate queries for analytics (SUM, COUNT, AVG, MIN, MAX, GROUP BY)
 
 **Note**: All action labels in Agentforce UI include the "Agentforce" prefix (e.g., "Agentforce Account Action", "Agentforce Task Action") for better branding and discoverability.
@@ -162,6 +163,7 @@ sf org assign permset --name AgentCourseSDOCustomAssetPermissions --target-org m
   - "Agentforce Meeting Action"
   - "Agentforce Customer Order Action"
   - "Agentforce Potential Adverse Event Action"
+  - "Agentforce Program Candidate Action"
   - "Agentforce Analytics Query"
 
 ### Optional: Populate Sample Data
@@ -217,6 +219,7 @@ System:
 | Meeting__c | ✅ | ✅ | ✅ | ✅ | ✅ | Pharma field sales, semantic picklist inference |
 | CustomerOrders__c | ✅ | ✅ | ✅ | ✅ | ✅ | Nested line items, bulk line item operations |
 | Potential_Adverse_Event__c | ✅ | ✅ | ✅ | ✅ | ✅ | Structured potential adverse event reports with account/contact lookups and semantic field mapping |
+| Program_Candidate__c | ✅ | ✅ | ✅ | ✅ | ✅ | Post-prescription support enrollment, phone-based enrollment with comprehensive field mapping, Lightning Path for enrollment status |
 | Analytics | ✅ | ✅ | N/A | N/A | ✅ | Aggregate queries (SUM, COUNT, AVG, MIN, MAX, GROUP BY) |
 
 ## 🤝 Contributing
@@ -278,5 +281,6 @@ For questions, issues, or feature requests, please contact Patrick Dennis or ope
 - **December 2025**: Repository cleanup - removed org-specific agent configurations (planner bundles, bot metadata, GenAI plugins), keeping only reusable assets
 - **December 2025**: Updated to API version 65.0
 - **December 2025**: Added AFUniversalAnalyticsAction for dynamic aggregate queries
-- **December 2025**: Added AFLeadAction and extended AFUniversalCrmRecordAction to support Lead CRUD/find with name/email/company search
+ - **December 2025**: Added AFLeadAction and extended AFUniversalCrmRecordAction to support Lead CRUD/find with name/email/company search
  - **December 2025**: Added AFPotentialAdverseEventAction and extended AFUniversalCrmRecordAction to support Potential_Adverse_Event__c CRUD/find with semantic mapping and account/contact lookups
+ - **December 2025**: Added AFProgramCandidateAction and Program_Candidate__c custom object for post-prescription support enrollment. Features include: phone-based enrollment with incremental data capture, comprehensive field mapping (basic info, contact, address, eligibility, insurance), Lightning Path for enrollment status tracking, compact layout, list views, and all fields with inline help text. No required fields - all optional for flexible enrollment workflows.

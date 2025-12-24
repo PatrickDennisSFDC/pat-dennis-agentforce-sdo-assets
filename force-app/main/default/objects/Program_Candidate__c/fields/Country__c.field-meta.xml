@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Country__c</fullName>
+    <description>Country where the candidate resides. Default to "United States" if not specified. No validation required - just capture the information provided. Example: "United States", "Canada", "Mexico".</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the country where the candidate resides (e.g., "United States", "Canada", "Mexico"). Defaults to "United States" if not specified. This is part of the complete address for mailing purposes.</inlineHelpText>
+    <label>Country</label>
+    <length>40</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

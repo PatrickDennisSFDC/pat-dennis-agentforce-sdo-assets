@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enrollment_Status__c</fullName>
+    <description>Current status in the enrollment process. Records typically start in 'New Inquiry' when the patient first calls. Use Lightning Path to track progress through enrollment. Valid values: New Inquiry (default), Information Gathering, Eligibility Review, Approved, Enrollment Pending, Enrolled, Declined, On Hold. Query availableFieldsJson to see all valid values.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Select the current status in the enrollment process. Records typically start in "New Inquiry" when the patient first calls. Use the Lightning Path on the record page to visualize progress. Field history is tracked for audit purposes.</inlineHelpText>
+    <label>Enrollment Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>New Inquiry</fullName>
+                <default>true</default>
+                <label>New Inquiry</label>
+            </value>
+            <value>
+                <fullName>Information Gathering</fullName>
+                <default>false</default>
+                <label>Information Gathering</label>
+            </value>
+            <value>
+                <fullName>Eligibility Review</fullName>
+                <default>false</default>
+                <label>Eligibility Review</label>
+            </value>
+            <value>
+                <fullName>Approved</fullName>
+                <default>false</default>
+                <label>Approved</label>
+            </value>
+            <value>
+                <fullName>Enrollment Pending</fullName>
+                <default>false</default>
+                <label>Enrollment Pending</label>
+            </value>
+            <value>
+                <fullName>Enrolled</fullName>
+                <default>false</default>
+                <label>Enrolled</label>
+            </value>
+            <value>
+                <fullName>Declined</fullName>
+                <default>false</default>
+                <label>Declined</label>
+            </value>
+            <value>
+                <fullName>On Hold</fullName>
+                <default>false</default>
+                <label>On Hold</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

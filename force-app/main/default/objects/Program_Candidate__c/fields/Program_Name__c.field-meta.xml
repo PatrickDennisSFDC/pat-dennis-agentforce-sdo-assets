@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Program_Name__c</fullName>
+    <description>Name of the support program or medication the candidate is enrolling in. Typically the name of the prescribed drug or medication (e.g., 'Product XYZ', 'Medication ABC'). Free-form text field for flexibility. This is usually the drug name the patient was prescribed.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the name of the support program or medication the candidate is enrolling in. This is typically the name of the prescribed drug or medication (e.g., "Product XYZ", "Medication ABC"). Free-form text field.</inlineHelpText>
+    <label>Program Name</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

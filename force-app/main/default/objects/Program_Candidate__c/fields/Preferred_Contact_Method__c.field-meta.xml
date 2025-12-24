@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Preferred_Contact_Method__c</fullName>
+    <description>Preferred method for contacting the candidate. Ask which method they prefer during enrollment. Valid values: Phone, Email, Text, Mail. Query availableFieldsJson to see all valid values.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Select the candidate's preferred method for future communications. Options: Phone, Email, Text (SMS), or Mail. Ask the candidate which method they prefer during the enrollment call.</inlineHelpText>
+    <label>Preferred Contact Method</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Phone</fullName>
+                <default>false</default>
+                <label>Phone</label>
+            </value>
+            <value>
+                <fullName>Email</fullName>
+                <default>false</default>
+                <label>Email</label>
+            </value>
+            <value>
+                <fullName>Text</fullName>
+                <default>false</default>
+                <label>Text</label>
+            </value>
+            <value>
+                <fullName>Mail</fullName>
+                <default>false</default>
+                <label>Mail</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

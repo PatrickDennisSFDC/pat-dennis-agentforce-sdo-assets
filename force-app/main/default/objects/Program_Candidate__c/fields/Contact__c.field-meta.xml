@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Related Contact record if one exists. Use contactNameOrEmail parameter to resolve by name or email. System should use best judgement to match by phone/email when creating records. This is optional - candidates can exist without a Contact.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Link this program candidate to a Contact record if one exists. This is optional - candidates can exist without a Contact. The system will attempt to match by phone/email when creating records.</inlineHelpText>
+    <label>Contact</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Program Candidates</relationshipLabel>
+    <relationshipName>Program_Candidates</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

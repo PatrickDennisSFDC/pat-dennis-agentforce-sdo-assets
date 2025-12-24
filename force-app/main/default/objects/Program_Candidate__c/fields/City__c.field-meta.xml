@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>City__c</fullName>
+    <description>City where the candidate resides. No validation required - just capture the information provided. Example: "San Francisco", "New York".</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the city where the candidate resides (e.g., "San Francisco", "New York"). This is part of the complete address for mailing purposes.</inlineHelpText>
+    <label>City</label>
+    <length>40</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

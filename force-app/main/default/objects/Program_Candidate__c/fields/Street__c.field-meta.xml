@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Street__c</fullName>
+    <description>Street address including apartment/unit number. Full address line for mailing and verification. No validation required - just capture the information provided. Example: "123 Main Street, Apt 4B".</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the street address including apartment or unit number if applicable (e.g., "123 Main Street, Apt 4B"). This is used for mailing program materials and verification.</inlineHelpText>
+    <label>Street</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

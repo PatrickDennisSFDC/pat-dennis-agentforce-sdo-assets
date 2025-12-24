@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FirstName__c</fullName>
+    <description>First Name of the program candidate. Capture when caller provides their first name during phone enrollment. This is typically one of the first pieces of information gathered.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the candidate's first name (given name). This is typically captured early in the phone enrollment conversation.</inlineHelpText>
+    <label>First Name</label>
+    <length>50</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

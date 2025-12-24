@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Phone__c</fullName>
+    <description>Primary phone number for the candidate. Format: (XXX) XXX-XXXX or XXX-XXX-XXXX. Used for contact and may be used to match existing Account/Contact records. This is a key contact method for enrollment follow-up.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the candidate's primary phone number. Accepts formats like (555) 123-4567 or 555-123-4567. This number may be used to match existing Account or Contact records.</inlineHelpText>
+    <label>Phone</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Phone</type>
+</CustomField>

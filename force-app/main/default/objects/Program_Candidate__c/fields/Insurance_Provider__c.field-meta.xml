@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Insurance_Provider__c</fullName>
+    <description>Name of the health insurance provider. Example: 'Blue Cross Blue Shield', 'Aetna', 'Medicare'. This is a key segment of information the AI agent should capture during enrollment. Insurance information is critical for program enrollment.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the name of the candidate's health insurance provider (e.g., "Blue Cross Blue Shield", "Aetna", "Medicare", "UnitedHealthcare"). This is a key piece of information to capture during enrollment for verification and billing coordination.</inlineHelpText>
+    <label>Insurance Provider</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

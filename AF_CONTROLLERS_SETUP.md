@@ -2,7 +2,7 @@
 
 ## ✅ What's Included
 
-This repository provides **8 consolidated invocable action classes** for Agentforce, each supporting all CRUD operations (Create, Read, Update, Delete, Find) in a single class:
+This repository provides **9 consolidated invocable action classes** for Agentforce, each supporting all CRUD operations (Create, Read, Update, Delete, Find) in a single class:
 
 1. **AFAccountAction** - Account management with ambiguity handling
 2. **AFContactAction** - Contact operations with email/name resolution
@@ -13,9 +13,10 @@ This repository provides **8 consolidated invocable action classes** for Agentfo
 7. **AFMeetingAction** - Custom Meeting object for field sales (pharmaceutical/medical)
 8. **AFCustomerOrderAction** - Order management with nested line items
 
-In addition, there is one **specialized domain action**:
+In addition, there are **specialized domain actions**:
 
 - **AFPotentialAdverseEventAction** - CRUD/find for `Potential_Adverse_Event__c`, capturing structured potential adverse event reports with account/contact lookups and semantic field mapping
+- **AFProgramCandidateAction** - CRUD/find for `Program_Candidate__c`, supporting post-prescription support enrollment where patients call in after receiving a prescription. Records are created incrementally as information is gathered during phone enrollment calls. Includes comprehensive field mapping for basic info, contact, address, program, eligibility, and insurance information. Features Lightning Path for enrollment status tracking.
 
 All classes:
 - ✅ Use `@InvocableMethod` for native Agentforce integration
@@ -70,11 +71,11 @@ sf project deploy start --source-dir force-app/main/default --target-org myorg
 ```
 
 This deploys:
-- All 7 consolidated action classes
+- All 9 consolidated action classes
 - Core utilities (`AFUniversalCrmRecordAction`, `AFUniversalAnalyticsAction`)
-- Custom objects and fields (`Meeting__c`, `CustomerOrders__c`, `Customer_Order_Line_Item__c`)
+- Custom objects and fields (`Meeting__c`, `CustomerOrders__c`, `Customer_Order_Line_Item__c`, `Potential_Adverse_Event__c`, `Program_Candidate__c`)
 - Permission sets
-- Page layouts
+- Page layouts, Lightning Pages, Lightning Paths, Compact Layouts, and List Views
 
 ### Step 3: Assign Permission Set (CRITICAL!)
 
@@ -119,6 +120,7 @@ sf org assign permset --name AgentCourseSDOCustomAssetPermissions --on-behalf-of
    - Search for "Agentforce Meeting Action" → Select `AFMeetingAction`
    - Search for "Agentforce Customer Order Action" → Select `AFCustomerOrderAction`
    - Search for "Agentforce Potential Adverse Event Action" → Select `AFPotentialAdverseEventAction`
+   - Search for "Agentforce Program Candidate Action" → Select `AFProgramCandidateAction`
 6. Add the actions you want your agent to use
 
 **Note**: Each action supports all CRUD operations. You don't need separate actions for create/read/update/delete - the agent will infer the operation from context.

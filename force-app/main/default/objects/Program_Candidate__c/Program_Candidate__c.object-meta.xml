@@ -41,9 +41,9 @@
         <type>Default</type>
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
-    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <compactLayoutAssignment>Program_Candidate_Compact_Layout</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>Track potential adverse events related to products.</description>
+    <description>Represents a candidate for enrollment into post-prescription support programs. Used for phone-based enrollment where patients call in after receiving a prescription and AI agents capture candidate information through conversation to enroll them in support programs.</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>true</enableFeeds>
@@ -54,20 +54,15 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
-    <label>Potential Adverse Event</label>
+    <label>Program Candidate</label>
     <nameField>
-        <displayFormat>PAE-{000000}</displayFormat>
-        <label>Potential Adverse Event Name</label>
+        <displayFormat>PC-{000000}</displayFormat>
+        <label>Program Candidate Name</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Potential Adverse Events</pluralLabel>
+    <pluralLabel>Program Candidates</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>
-
-
-
-
-

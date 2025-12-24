@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email__c</fullName>
+    <description>Primary email address for the candidate. Use for communication and enrollment confirmations. May be used to match existing Account/Contact records. This is a key contact method for enrollment follow-up and documentation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the candidate's primary email address (e.g., john.smith@example.com). This email may be used to match existing Account or Contact records and is used for enrollment confirmations.</inlineHelpText>
+    <label>Email</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Email</type>
+    <unique>false</unique>
+</CustomField>
